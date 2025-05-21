@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DesiTools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #1E1E2F;
+            color: #EAEAEA;
+            text-align: center;
+        }
+
+        .header {
+            background: #2B2D42;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .category {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 40px auto 20px;
+            color: #FFD700;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 10px;
+        }
+
+        .tool-card {
+            background: #3A3D5B;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: 0.3s;
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+        }
+
+        .tool-card:hover {
+            background: #FFD700;
+            color: #1E1E2F;
+        }
+
+        .tool-card h2 {
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #FFD700;
+            color: #1E1E2F;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #E6C200;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">DesiTools</div>
+
+    <div class="category">🖼️ Image Tools</div>
+    <div class="container" id="image-tools"></div>
+
+    <div class="category">🎥 Video Tools</div>
+    <div class="container" id="video-tools"></div>
+
+    <div class="category">🔊 Audio Tools</div>
+    <div class="container" id="audio-tools"></div>
+
+    <div class="category">📊 Calculator & Utility</div>
+    <div class="container" id="utility-tools"></div>
+
+    <div class="category">📄 PDF Tools</div>
+    <div class="container" id="pdf-tools"></div>
+
+    <div class="category">🤖 AI Tools</div>
+    <div class="container" id="ai-tools"></div>
+
+    <!-- 10 New Categories -->
+    <div class="category">📷 Camera Tools</div>
+    <div class="container" id="camera-tools"></div>
+
+    <div class="category">🎨 Design Tools</div>
+    <div class="container" id="design-tools"></div>
+
+    <div class="category">📚 Education Tools</div>
+    <div class="container" id="education-tools"></div>
+
+    <div class="category">💼 Business Tools</div>
+    <div class="container" id="business-tools"></div>
+
+    <div class="category">📱 Social Media Tools</div>
+    <div class="container" id="social-tools"></div>
+
+    <div class="category">🛠️ Developer Tools</div>
+    <div class="container" id="developer-tools"></div>
+
+    <div class="category">📝 Writing Tools</div>
+    <div class="container" id="writing-tools"></div>
+
+    <div class="category">🧠 Productivity Tools</div>
+    <div class="container" id="productivity-tools"></div>
+
+    <div class="category">🌐 Web Tools</div>
+    <div class="container" id="web-tools"></div>
+
+    <div class="category">🧪 Experimental Tools</div>
+    <div class="container" id="experimental-tools"></div>
+
+    <script>
+        const categories = {
+            "image-tools": [
+                "Image Converter", "Image Compressor", "Image Crop",
+                "Background Remover", "Image Resizer", "Image Enhancer",
+                "Image Sharpen", "Image Blur", "Image Rotate",
+                "Image Flip", "Image Watermark", "Image Color Adjust",
+                "Image Filter", "Image Brightness", "Image Contrast",
+                "Image Saturation", "Image Noise Reduction", "Image Overlay",
+                "Image Border", "Image Text Overlay", "Image Format Detector",
+                "Image Metadata Viewer", "Image Batch Processor", "Image HDR",
+                "Image Mosaic", "Image Pixelate", "Image Cartoonify",
+                "Image Sketch", "Image Colorize", "Image Denoise"
+            ],
+
+            "video-tools": [
+                "Video Converter",
+                "Video Trimmer", "Video Compressor", "Video Merger",
+                "Video Splitter", "Video Rotator", "Video Cropper",
+                "Video Resizer", "Video Watermark", "Video Stabilizer",
+                "Video Frame Extractor", "Video Speed Controller", "Video Subtitle Adder",
+                "Video Format Detector", "Video Metadata Viewer", "Video Thumbnail Generator",
+                "Video Filter", "Video Audio Extractor", "Video Loop Maker",
+                "Video Color Correction", "Video Noise Reduction"
+            ],
+
+            "audio-tools": [
+                "Audio Trim"
+            ],
+
+            "utility-tools": [
+                "Age Calculator", "EMI Calculator", "SIP Calculator"
+            ],
+
+            "pdf-tools": [
+                "PDF Merger", "PDF Splitter", "PDF to Word", "Word to PDF", "Compress PDF",
+                "PDF Password Remover", "Image to PDF", "PDF to Image"
+            ],
+
+            "ai-tools": [
+                "AI Logo Maker", "AI Copywriter"
+            ],
+
+            "camera-tools": [
+                "Selfie Enhancer", "Virtual Background", "Live Filter", "Camera Zoom Tool", "Camera Grid Tool",
+                "Beauty Filter AI", "Motion Detector", "Snapshot Tool", "Photo Timer", "HDR Filter Tool",
+                "Panorama Capture", "Camera Stabilizer", "AR Mask", "Mirror Mode Tool", "Document Scanner",
+                "Video Snapshot Tool", "Camera Exposure Tool", "Time-lapse Creator", "Flashlight Controller", "Slow Motion Cam"
+            ],
+
+            "design-tools": [
+                "Logo Generator", "Poster Maker", "Flyer Designer", "Business Card Maker", "Color Picker",
+                "Palette Generator", "Mockup Creator", "Favicon Generator", "Banner Maker", "Sticker Designer",
+                "Social Media Post Maker", "Typography Tool", "Icon Maker", "Pixel Art Tool", "Canvas Drawing App",
+                "3D Mockup Viewer", "Wireframe Builder", "Brand Style Guide Maker", "Label Designer", "Infographic Creator"
+            ],
+
+            "education-tools": [
+                "Math Solver", "Periodic Table", "Flashcards AI", "Essay Grader AI", "Question Generator",
+                "Quiz Maker", "Mind Map Creator", "Study Planner", "Language Translator", "Dictionary Tool",
+                "Citation Generator", "Plagiarism Checker", "Science Diagram Tool", "Reading Speed Checker", "AI Tutor Bot",
+                "Exam Countdown Timer", "Voice Notes", "Whiteboard Tool", "Grammar Quiz Tool", "Unit Converter"
+            ],
+
+            "business-tools": [
+                "Invoice Generator", "Receipt Maker", "Payroll Calculator", "Profit Margin Calculator", "Stock Tracker",
+                "Business Name Generator", "Tax Estimator", "Startup Cost Planner", "Meeting Scheduler", "Proposal Writer",
+                "Business Card AI", "Inventory Tracker", "Sales Chart Generator", "Cash Flow Tool", "KPI Dashboard",
+                "Balance Sheet Tool", "Quote Maker", "Affiliate Tracker", "Loan Amortizer", "Currency Converter"
+            ],
+
+            "social-tools": [
+                "Instagram Caption AI", "Hashtag Generator", "Post Scheduler", "Bio Generator", "Engagement Calculator",
+                "TikTok Script Maker", "Tweet Generator", "YouTube Title AI", "Social Media Audit", "Reel Generator",
+                "Profile Picture Editor", "Highlight Cover Maker", "Social Post Templates", "Post Rewriter AI", "Social Planner",
+                "Post Analyzer", "Facebook Ad Text Generator", "LinkedIn Post Generator", "Threads Caption Tool", "Post Previewer"
+            ],
+
+            "developer-tools": [
+                "JSON Formatter", "Regex Generator", "HTML Minifier", "CSS Beautifier", "Code Diff Checker",
+                "GitHub README Generator", "UUID Generator", "Password Generator", "JWT Decoder", "Lorem Ipsum Generator",
+                "Color Code Converter", "Markdown Previewer", "API Tester", "Code Runner", "Version Checker",
+                "Image Base64 Encoder", "Timestamp Converter", "Meta Tag Generator", "Header Checker", "WebSocket Tester"
+            ],
+
+            "writing-tools": [
+                "Blog Post Writer", "Essay Rewriter", "Headline Analyzer", "Email Writer", "Story Generator",
+                "Poem Generator", "Resume Writer", "Cover Letter Generator", "Punctuation Checker", "Text Summarizer",
+                "Content Expander", "Tone Rewriter", "Paragraph Improver", "Grammar Fixer", "Plagiarism Detector",
+                "Script Writer", "Bio Generator", "Letter Generator", "Bullet Point Creator", "Joke Generator"
+            ],
+
+            "productivity-tools": [
+                "To-Do List", "Pomodoro Timer", "Daily Planner", "Habit Tracker", "Notes App",
+                "Focus Mode", "Meeting Timer", "Mind Map Tool", "Priority Matrix", "Weekly Planner",
+                "Goal Tracker", "Calendar Sync Tool", "Sticky Notes", "Time Tracker", "Break Reminder",
+                "Decision Maker", "Routine Builder", "Clipboard Manager", "Voice Memo Tool", "Quick Links Launcher"
+            ],
+
+            "web-tools": [
+                "Website Screenshot Tool", "Ping Tool", "Speed Test", "SEO Analyzer", "Domain Checker",
+                "WHOIS Lookup", "IP Locator", "DNS Checker", "SSL Checker", "Page Size Checker",
+                "Responsive Test Tool", "Robots.txt Generator", "Sitemap Generator", "Favicon Previewer", "Meta Description Tester",
+                "Keyword Density Tool", "Broken Link Checker", "Header Status Checker", "Email Extractor", "Color Blindness Tester"
+            ],
+
+            "experimental-tools": [
+                "AI Dream Generator", "Voice Emotion Detector", "Mood Scanner", "AI Chat Companion", "Future Predictor",
+                "3D Face Maker", "Virtual Pet AI", "Emoji Creator", "Magic 8 Ball AI", "Thought to Text",
+                "Brainwave Visualizer", "Random Idea Generator", "Emotion Tracker", "Dream Journal", "Star Sign Matcher",
+                "Typing Speed Game", "AI Puzzle Solver", "Meme Detector", "Voice Style Changer", "Digital Fortune Teller"
+            ]
+        };
+
+        function createToolCard(toolName, categoryId) {
+            const container = document.getElementById(categoryId);
+            const card = document.createElement("div");
+            card.className = "tool-card";
+
+            const title = document.createElement("h2");
+            title.textContent = toolName;
+
+            const desc = document.createElement("p");
+            desc.textContent = `Try the ${toolName} tool.`;
+
+            const btn = document.createElement("button");
+            btn.className = "btn";
+            btn.textContent = "Go to Tool";
+            btn.onclick = () => alert(`Redirecting to ${toolName} (Page under development)`);
+
+            card.appendChild(title);
+            card.appendChild(desc);
+            card.appendChild(btn);
+            container.appendChild(card);
+        }
+
+        for (const categoryId in categories) {
+            categories[categoryId].forEach(tool => {
+                createToolCard(tool, categoryId);
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Contact Us - DesiTools</title>
+<style>
+    body {
+        background: #1E1E2F;
+        color: #EAEAEA;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 40px;
+    }
+    h1 {
+        color: #FFD700;
+        margin-bottom: 30px;
+    }
+    p {
+        font-size: 18px;
+    }
+    a {
+        color: #FFD700;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+    <h1>Contact Us</h1>
+    <p>For any queries or support, please email us at:</p>
+    <p><a href="mailto:kapadiyavishal41@gmail.com">kapadiyavishal41@gmail.com</a></p>
+</body>
+</html>
+
