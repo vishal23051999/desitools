@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DesiTools</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1E1E2F;
+      color: #EAEAEA;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #2B2D42;
+      padding: 20px 0;
+      text-align: center;
+      font-size: 2em;
+      color: #FFD700;
+      box-shadow: 0 2px 5px rgba(255, 215, 0, 0.1);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    header a.privacy-link {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #FFD700;
+      font-size: 0.9em;
+      text-decoration: none;
+      border: 1px solid #FFD700;
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+      cursor: pointer;
+    }
+    header a.privacy-link:hover {
+      background-color: #FFD700;
+      color: #1E1E2F;
+    }
+
+    main {
+      flex-grow: 1;
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .tool-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .tool-card {
+      background-color: #3A3D5B;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+      transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .tool-card:hover {
+      background-color: #FFD700;
+      color: #1E1E2F;
+      box-shadow: 0 6px 18px rgba(255, 215, 0, 0.2);
+    }
+
+    .tool-card h2 {
+      margin-top: 0;
+      font-size: 1.4em;
+    }
+
+    .tool-card p {
+      margin: 10px 0 20px;
+      flex-grow: 1;
+    }
+
+    .tool-card button {
+      background-color: #FFD700;
+      color: #1E1E2F;
+      font-weight: bold;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      align-self: flex-start;
+    }
+
+    .tool-card button:hover {
+      background-color: #E6C200;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        padding: 20px;
+      }
+      .tool-container {
+        grid-template-columns: 1fr;
+      }
+      header a.privacy-link {
+        position: static;
+        display: block;
+        margin-top: 10px;
+        transform: none;
+        text-align: center;
+      }
+    }
+
+    /* Privacy Policy modal */
+    #privacy-policy {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(30, 30, 47, 0.95);
+      color: #EAEAEA;
+      overflow-y: auto;
+      padding: 40px 20px;
+      box-sizing: border-box;
+      z-index: 9999;
+      display: none;
+    }
+
+    #privacy-policy > div {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #3A3D5B;
+      border-radius: 10px;
+      padding: 30px 40px;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+      line-height: 1.6;
+    }
+
+    #privacy-policy h2 {
+      color: #FFD700;
+      margin-top: 0;
+      font-size: 2em;
+    }
+
+    #privacy-policy h3 {
+      color: #FFD700;
+      margin-top: 1.2em;
+      margin-bottom: 0.5em;
+    }
+
+    #privacy-policy a {
+      color: #FFD700;
+      text-decoration: underline;
+    }
+
+    #privacy-policy button {
+      background-color: #FFD700;
+      color: #1E1E2F;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 30px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+      display: block;
+      margin-left: auto;
+    }
+
+    #privacy-policy button:hover {
+      background-color: #E6C200;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    DesiTools
+    <a href="#" class="privacy-link" onclick="showPrivacyPolicy(event)">Privacy Policy</a>
+  </header>
+
+  <main>
+    <div class="tool-container" id="tool-container">
+
+      <!-- Your existing 8 tools -->
+      <div class="tool-card">
+        <h2>Image Converter</h2>
+        <p>Convert images between formats like JPG, PNG, and WebP.</p>
+        <button onclick="redirectToTool('Image Converter', 'tools/image-converter.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>Image Compressor</h2>
+        <p>Reduce image file sizes without losing quality.</p>
+        <button onclick="redirectToTool('Image Compressor', 'tools/image-compressor.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>Image Crop</h2>
+        <p>Crop your images easily and accurately.</p>
+        <button onclick="redirectToTool('Image Crop', 'tools/image-crop.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>Video Converter</h2>
+        <p>Convert videos to different formats effortlessly.</p>
+        <button onclick="redirectToTool('Video Converter', 'tools/video-converter.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>Age Calculator</h2>
+        <p>Calculate your exact age from your birthdate.</p>
+        <button onclick="redirectToTool('Age Calculator', 'tools/age-calculator.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>EMI Calculator</h2>
+        <p>Estimate your monthly EMI payments for loans.</p>
+        <button onclick="redirectToTool('EMI Calculator', 'tools/emi-calculator.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>SIP Calculator</h2>
+        <p>Plan your mutual fund SIP returns accurately.</p>
+        <button onclick="redirectToTool('SIP Calculator', 'tools/sip-calculator.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>Audio Trim</h2>
+        <p>Trim and cut audio files to your desired length.</p>
+        <button onclick="redirectToTool('Audio Trim', 'tools/audio-trim.html')">Open Tool</button>
+      </div>
+
+      <!-- 50 New Tools (summary, only a few shown here; add all as needed) -->
+      <div class="tool-card">
+        <h2>PDF to Word Converter</h2>
+        <p>Convert PDF files to editable Word documents.</p>
+        <button onclick="redirectToTool('PDF to Word Converter', 'tools/pdf-to-word.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>Word to PDF Converter</h2>
+        <p>Convert Word documents into PDF format.</p>
+        <button onclick="redirectToTool('Word to PDF Converter', 'tools/word-to-pdf.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>PDF Merger</h2>
+        <p>Combine multiple PDF files into one.</p>
+        <button onclick="redirectToTool('PDF Merger', 'tools/pdf-merger.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>PDF Splitter</h2>
+        <p>Split PDF files into smaller parts.</p>
+        <button onclick="redirectToTool('PDF Splitter', 'tools/pdf-splitter.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>PDF Compressor</h2>
+        <p>Reduce PDF file size without quality loss.</p>
+        <button onclick="redirectToTool('PDF Compressor', 'tools/pdf-compressor.html')">Open Tool</button>
+      </div>
+
+      <div class="tool-card">
+        <h2>Image Resizer</h2>
+        <p>Resize images to custom dimensions quickly.</p>
+        <button onclick="redirectToTool('Image Resizer', 'tools/image-resizer.html')">Open Tool</button>
+      </div>
+
+      <!-- Add all other tools here similarly -->
+
+    </div>
+  </main>
+
+  <!-- Privacy Policy Modal -->
+  <section id="privacy-policy" aria-modal="true" role="dialog" aria-labelledby="privacy-title" aria-describedby="privacy-desc">
+    <div>
+      <h2 id="privacy-title">Privacy Policy</h2>
+      <p><strong>Last updated:</strong> May 22, 2025</p>
+      <p>Welcome to DesiTools. Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website and tools.</p>
+
+      <h3>Information We Collect</h3>
+      <p>We do not collect any personal data unless you voluntarily provide it (e.g., via contact forms or tool usage). We do not share your information with third parties.</p>
+
+      <h3>Cookies</h3>
+      <p>Our site uses minimal cookies necessary for functionality and analytics. You can disable cookies in your browser settings if you prefer.</p>
+
+      <h3>Data Security</h3>
+      <p>We take reasonable measures to protect your data, but no internet transmission is 100% secure.</p>
+
+      <h3>Third-Party Links</h3>
+      <p>Our tools might link to external websites. We are not responsible for their privacy practices.</p>
+
+      <h3>Changes to this Policy</h3>
+      <p>We may update this policy occasionally. Changes will be posted on this page with the updated date.</p>
+
+      <h3>Contact Us</h3>
+      <p>If you have any questions about this Privacy Policy, please contact us at <a href="mailto:support@desitools.com">support@desitools.com</a>.</p>
+
+      <button onclick="hidePrivacyPolicy()" aria-label="Close Privacy Policy">Close</button>
+    </div>
+  </section>
+
+  <script>
+    function redirectToTool(toolName, url) {
+      alert("Redirecting to " + toolName);
+      window.open(url, '_blank');
+    }
+
+    function showPrivacyPolicy(event) {
+      event.preventDefault();
+      document.getElementById('privacy-policy').style.display = 'block';
+      window.scrollTo(0,0);
+    }
+
+    function hidePrivacyPolicy() {
+      document.getElementById('privacy-policy').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
