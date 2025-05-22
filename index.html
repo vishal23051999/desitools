@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multi Tool Hub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1E1E2F;
+      color: #EAEAEA;
+    }
+
+    header {
+      background-color: #2B2D42;
+      padding: 20px 0;
+      text-align: center;
+      font-size: 2em;
+      color: #FFD700;
+      box-shadow: 0 2px 5px rgba(255, 215, 0, 0.1);
+    }
+
+    .tool-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      padding: 40px;
+    }
+
+    .tool-card {
+      background-color: #3A3D5B;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .tool-card:hover {
+      background-color: #FFD700;
+      color: #1E1E2F;
+      box-shadow: 0 6px 18px rgba(255, 215, 0, 0.2);
+    }
+
+    .tool-card h2 {
+      margin-top: 0;
+    }
+
+    .tool-card p {
+      margin: 10px 0 20px;
+    }
+
+    .tool-card button {
+      background-color: #FFD700;
+      color: #1E1E2F;
+      font-weight: bold;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .tool-card button:hover {
+      background-color: #E6C200;
+    }
+
+    @media (max-width: 768px) {
+      .tool-container {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    Multi Tool Hub
+  </header>
+
+  <main class="tool-container">
+    <!-- Existing 8 Tools -->
+    <div class="tool-card">
+      <h2>Image Converter</h2>
+      <p>Convert images between formats like JPG, PNG, and WebP.</p>
+      <button onclick="redirectToTool('Image Converter', 'tools/image-converter.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Image Compressor</h2>
+      <p>Reduce image file sizes without losing quality.</p>
+      <button onclick="redirectToTool('Image Compressor', 'tools/image-compressor.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Image Crop</h2>
+      <p>Crop your images easily and accurately.</p>
+      <button onclick="redirectToTool('Image Crop', 'tools/image-crop.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Video Converter</h2>
+      <p>Convert videos to different formats effortlessly.</p>
+      <button onclick="redirectToTool('Video Converter', 'tools/video-converter.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Age Calculator</h2>
+      <p>Calculate your exact age from your birthdate.</p>
+      <button onclick="redirectToTool('Age Calculator', 'tools/age-calculator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>EMI Calculator</h2>
+      <p>Estimate your monthly EMI payments for loans.</p>
+      <button onclick="redirectToTool('EMI Calculator', 'tools/emi-calculator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>SIP Calculator</h2>
+      <p>Plan your mutual fund SIP returns accurately.</p>
+      <button onclick="redirectToTool('SIP Calculator', 'tools/sip-calculator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Audio Trim</h2>
+      <p>Trim and cut audio files to your desired length.</p>
+      <button onclick="redirectToTool('Audio Trim', 'tools/audio-trim.html')">Open Tool</button>
+    </div>
+
+    <!-- 50 New Tools Added Below -->
+
+    <div class="tool-card">
+      <h2>PDF to Word Converter</h2>
+      <p>Convert PDF files to editable Word documents.</p>
+      <button onclick="redirectToTool('PDF to Word Converter', 'tools/pdf-to-word.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Word to PDF Converter</h2>
+      <p>Convert Word documents into PDF format.</p>
+      <button onclick="redirectToTool('Word to PDF Converter', 'tools/word-to-pdf.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>PDF Merger</h2>
+      <p>Combine multiple PDF files into one.</p>
+      <button onclick="redirectToTool('PDF Merger', 'tools/pdf-merger.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>PDF Splitter</h2>
+      <p>Split PDF files into smaller parts.</p>
+      <button onclick="redirectToTool('PDF Splitter', 'tools/pdf-splitter.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>PDF Compressor</h2>
+      <p>Reduce PDF file size without quality loss.</p>
+      <button onclick="redirectToTool('PDF Compressor', 'tools/pdf-compressor.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Image Resizer</h2>
+      <p>Resize images to custom dimensions quickly.</p>
+      <button onclick="redirectToTool('Image Resizer', 'tools/image-resizer.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Image Rotator</h2>
+      <p>Rotate images clockwise or counter-clockwise.</p>
+      <button onclick="redirectToTool('Image Rotator', 'tools/image-rotator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Image Watermark</h2>
+      <p>Add watermark text or image to photos.</p>
+      <button onclick="redirectToTool('Image Watermark', 'tools/image-watermark.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Video Compressor</h2>
+      <p>Compress large videos without losing quality.</p>
+      <button onclick="redirectToTool('Video Compressor', 'tools/video-compressor.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Video Cropper</h2>
+      <p>Crop videos to remove unwanted parts.</p>
+      <button onclick="redirectToTool('Video Cropper', 'tools/video-cropper.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Audio Converter</h2>
+      <p>Convert audio files between formats like MP3, WAV.</p>
+      <button onclick="redirectToTool('Audio Converter', 'tools/audio-converter.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Audio Merger</h2>
+      <p>Merge multiple audio files into one track.</p>
+      <button onclick="redirectToTool('Audio Merger', 'tools/audio-merger.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Text to Speech</h2>
+      <p>Convert written text to spoken audio files.</p>
+      <button onclick="redirectToTool('Text to Speech', 'tools/text-to-speech.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Speech to Text</h2>
+      <p>Convert spoken words into editable text.</p>
+      <button onclick="redirectToTool('Speech to Text', 'tools/speech-to-text.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>QR Code Generator</h2>
+      <p>Create QR codes for websites and text.</p>
+      <button onclick="redirectToTool('QR Code Generator', 'tools/qr-generator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>QR Code Scanner</h2>
+      <p>Scan QR codes with your device camera.</p>
+      <button onclick="redirectToTool('QR Code Scanner', 'tools/qr-scanner.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Password Generator</h2>
+      <p>Generate secure random passwords easily.</p>
+      <button onclick="redirectToTool('Password Generator', 'tools/password-generator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Base64 Encoder</h2>
+      <p>Encode text or images into Base64 format.</p>
+      <button onclick="redirectToTool('Base64 Encoder', 'tools/base64-encoder.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Base64 Decoder</h2>
+      <p>Decode Base64 encoded text or images.</p>
+      <button onclick="redirectToTool('Base64 Decoder', 'tools/base64-decoder.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Color Picker</h2>
+      <p>Pick colors and get their hex and RGB codes.</p>
+      <button onclick="redirectToTool('Color Picker', 'tools/color-picker.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>HTML Formatter</h2>
+      <p>Format and beautify messy HTML code.</p>
+      <button onclick="redirectToTool('HTML Formatter', 'tools/html-formatter.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>CSS Formatter</h2>
+      <p>Beautify and organize CSS code neatly.</p>
+      <button onclick="redirectToTool('CSS Formatter', 'tools/css-formatter.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>JavaScript Formatter</h2>
+      <p>Clean and format JavaScript code.</p>
+      <button onclick="redirectToTool('JavaScript Formatter', 'tools/js-formatter.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>JSON Formatter</h2>
+      <p>Format JSON data for easy reading and debugging.</p>
+      <button onclick="redirectToTool('JSON Formatter', 'tools/json-formatter.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>JSON Validator</h2>
+      <p>Validate and check JSON syntax correctness.</p>
+      <button onclick="redirectToTool('JSON Validator', 'tools/json-validator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>CSV to JSON Converter</h2>
+      <p>Convert CSV data files into JSON format.</p>
+      <button onclick="redirectToTool('CSV to JSON Converter', 'tools/csv-to-json.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>JSON to CSV Converter</h2>
+      <p>Convert JSON data into CSV files.</p>
+      <button onclick="redirectToTool('JSON to CSV Converter', 'tools/json-to-csv.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Markdown to HTML</h2>
+      <p>Convert Markdown text to HTML code.</p>
+      <button onclick="redirectToTool('Markdown to HTML', 'tools/markdown-to-html.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>HTML to Markdown</h2>
+      <p>Convert HTML code to Markdown format.</p>
+      <button onclick="redirectToTool('HTML to Markdown', 'tools/html-to-markdown.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>UUID Generator</h2>
+      <p>Generate unique identifiers (UUIDs) for your projects.</p>
+      <button onclick="redirectToTool('UUID Generator', 'tools/uuid-generator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Time Zone Converter</h2>
+      <p>Convert time between different time zones worldwide.</p>
+      <button onclick="redirectToTool('Time Zone Converter', 'tools/timezone-converter.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Unit Converter</h2>
+      <p>Convert between different units of measurement.</p>
+      <button onclick="redirectToTool('Unit Converter', 'tools/unit-converter.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Color Contrast Checker</h2>
+      <p>Check color contrast for accessibility compliance.</p>
+      <button onclick="redirectToTool('Color Contrast Checker', 'tools/color-contrast.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>Text Case Converter</h2>
+      <p>Convert text between uppercase, lowercase, and more.</p>
+      <button onclick="redirectToTool('Text Case Converter', 'tools/text-case.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Text Summarizer</h2>
+      <p>Summarize long texts into short, concise points.</p>
+      <button onclick="redirectToTool('AI Text Summarizer', 'tools/ai-text-summarizer.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Image Generator</h2>
+      <p>Create images from text prompts using AI.</p>
+      <button onclick="redirectToTool('AI Image Generator', 'tools/ai-image-generator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Chatbot</h2>
+      <p>Interact with an AI-powered conversational agent.</p>
+      <button onclick="redirectToTool('AI Chatbot', 'tools/ai-chatbot.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Code Generator</h2>
+      <p>Generate programming code snippets from descriptions.</p>
+      <button onclick="redirectToTool('AI Code Generator', 'tools/ai-code-generator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Grammar Checker</h2>
+      <p>Check and correct grammar mistakes in your text.</p>
+      <button onclick="redirectToTool('AI Grammar Checker', 'tools/ai-grammar-checker.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Language Translator</h2>
+      <p>Translate text between multiple languages using AI.</p>
+      <button onclick="redirectToTool('AI Language Translator', 'tools/ai-language-translator.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Voice Cloner</h2>
+      <p>Clone voices and generate speech with AI.</p>
+      <button onclick="redirectToTool('AI Voice Cloner', 'tools/ai-voice-cloner.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Video Summarizer</h2>
+      <p>Generate concise summaries from videos automatically.</p>
+      <button onclick="redirectToTool('AI Video Summarizer', 'tools/ai-video-summarizer.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Background Remover</h2>
+      <p>Remove image backgrounds automatically using AI.</p>
+      <button onclick="redirectToTool('AI Background Remover', 'tools/ai-background-remover.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Photo Enhancer</h2>
+      <p>Enhance image quality and resolution with AI.</p>
+      <button onclick="redirectToTool('AI Photo Enhancer', 'tools/ai-photo-enhancer.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Code Debugger</h2>
+      <p>Find and fix bugs in your code with AI assistance.</p>
+      <button onclick="redirectToTool('AI Code Debugger', 'tools/ai-code-debugger.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Data Extractor</h2>
+      <p>Extract useful data from documents using AI.</p>
+      <button onclick="redirectToTool('AI Data Extractor', 'tools/ai-data-extractor.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Meeting Transcriber</h2>
+      <p>Transcribe meetings and conversations in real-time.</p>
+      <button onclick="redirectToTool('AI Meeting Transcriber', 'tools/ai-meeting-transcriber.html')">Open Tool</button>
+    </div>
+
+    <div class="tool-card">
+      <h2>AI Code Translator</h2>
+      <p>Convert code between different programming languages.</p>
+      <button onclick="redirectToTool('AI Code Translator', 'tools/ai-code-translator.html')">Open Tool</button>
+    </div>
+
+  </main>
+
+  <script>
+    function redirectToTool(toolName, url) {
+      alert("Redirecting to " + toolName);
+      window.open(url, '_blank');
+    }
+  </script>
+
+</body>
+</html>
