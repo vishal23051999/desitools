@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Madhav Weather</title>
+  <style>
+    :root {
+      --primary: #00BFFF;
+      --background: #E6F7FF;
+      --text: #000;
+      --card-bg: rgba(255, 255, 255, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: all 0.3s ease-in-out;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--background);
+      background-size: cover;
+      background-position: center;
+      color: var(--text);
+    }
+
+    header, footer {
+      background: var(--primary);
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    main {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0, 191, 255, 0.2);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 1s ease-in;
+    }
+
+    input, select, button {
+      padding: 12px;
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      border: 1px solid #00BFFF;
+      background-color: #f0fcff;
+    }
+
+    button {
+      background: var(--primary);
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0099cc;
+    }
+
+    .weather-info {
+      margin-top: 1.5rem;
+      display: none;
+      animation: slideIn 1s ease forwards;
+    }
+
+    .weather-info p {
+      margin: 8px 0;
+      font-size: 1.1rem;
+    }
+
+    #quote {
+      font-weight: bold;
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>🌦️ Madhav Weather</header>
+
+  <main>
+    <div class="card">
+      <input type="text" id="cityInput" placeholder="Enter city name" />
+      <select id="languageSelect">
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+      </select>
+      <button onclick="getWeather()">Check Weather</button>
+
+      <div class="weather-info" id="weatherInfo">
+        <p><strong id="cityName"></strong></p>
+        <p>🕒 Time: <span id="time"></span></p>
+        <p>🌡️ Temperature: <span id="temp"></span> °C</p>
+        <p>🌤️ Condition: <span id="condition"></span></p>
+        <p>💧 Humidity: <span id="humidity"></span>%</p>
+        <p>💨 Wind: <span id="wind"></span> m/s</p>
+        <p>🌅 Sunrise: <span id="sunrise"></span></p>
+        <p>🌇 Sunset: <span id="sunset"></span></p>
+        <p>🌫 AQI: <span id="aqi"></span></p>
+        <p id="quote"></p>
+      </div>
+    </div>
+  </main>
+
+  <footer>© 2025 Madhav Weather</footer>
+
+  <script>
+    const API_KEY = "bfc41a67897092b16f4f053a1211032d";
+    const quotes = [
+      "Believe in yourself. 🌟",
+      "Every day is a new beginning. 🌅",
+      "You can do it! 💪",
+      "Stay positive, work hard. 💼",
+      "Dream big and dare to fail. ✨"
+    ];
+
+    function getWeather() {
+      const city = document.getElementById("cityInput").value.trim();
+      const lang = document.getElementById("languageSelect").value;
+      if (!city) return alert("Please enter a city.");
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=${lang}`)
+        .then(res => res.json())
+        .then(data => showWeather(data))
+        .catch(() => alert("Failed to fetch weather data."));
+    }
+
+    function showWeather(data) {
+      if (!data || !data.main) return alert("Weather data unavailable.");
+      const info = document.getElementById("weatherInfo");
+      info.style.display = "block";
+
+      document.getElementById("cityName").textContent = `${data.name}, ${data.sys.country}`;
+      document.getElementById("temp").textContent = data.main.temp;
+      document.getElementById("condition").textContent = data.weather[0].description;
+      document.getElementById("humidity").textContent = data.main.humidity;
+      document.getElementById("wind").textContent = data.wind.speed;
+      document.getElementById("sunrise").textContent = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
+      document.getElementById("sunset").textContent = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+      document.getElementById("time").textContent = new Date(data.dt * 1000).toLocaleTimeString();
+      document.getElementById("quote").textContent = quotes[Math.floor(Math.random() * quotes.length)];
+    }
+  </script>
+</body>
+</html>
