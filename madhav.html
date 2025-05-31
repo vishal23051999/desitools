@@ -12,7 +12,7 @@
       --primary-dark: #0088cc;
       --background: #E6F7FF;
       --text: #000;
-      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-bg: rgba(255, 255, 255, 0.95);
       --suggestion-bg: rgba(255, 255, 255, 0.85);
       --shadow: rgba(0, 0, 0, 0.1);
       --success: #4CAF50;
@@ -42,6 +42,9 @@
       display: flex;
       flex-direction: column;
       background-attachment: fixed;
+      animation: gradientAnimation 20s ease infinite;
+      background-size: 200% 200%;
+      background-image: linear-gradient(135deg, #43CBFF, #9708CC, #5EFCE8, #736EFE);
     }
 
     header, footer {
@@ -69,6 +72,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      z-index: 100;
     }
     
     .dark .toggle-mode {
@@ -198,6 +202,7 @@
       backdrop-filter: blur(5px);
       border: 1px solid rgba(0, 191, 255, 0.2);
       border-top: none;
+      animation: slideDown 0.3s ease-out;
     }
     
     .suggestion-item {
@@ -230,7 +235,7 @@
     .weather-icon {
       font-size: 3.5rem;
       margin: 15px 0;
-      animation: pulse 2s infinite;
+      animation: pulse 2s infinite, float 4s ease-in-out infinite;
     }
 
     .weather-info p {
@@ -309,6 +314,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: transform 0.3s;
+    }
+    
+    .detail-card:hover {
+      transform: translateY(-5px);
+      background: rgba(0, 191, 255, 0.15);
     }
     
     .detail-card i {
@@ -327,6 +338,14 @@
       font-size: 0.9rem;
       opacity: 0.8;
     }
+    
+    .local-time {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin: 15px 0;
+      color: var(--primary);
+      animation: fadeIn 1s;
+    }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.95); }
@@ -335,6 +354,11 @@
 
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
     
@@ -366,12 +390,23 @@
       50% { transform: translateY(-10px); }
       100% { transform: translateY(0); }
     }
+    
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
     @media (max-width: 600px) {
       .card { padding: 1.5rem; }
       header, footer { padding: 1rem; }
       .weather-details {
         grid-template-columns: 1fr;
+      }
+      .toggle-mode {
+        top: 8px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -409,15 +444,14 @@
         <div class="weather-icon" id="weatherIcon">
           <i class="fas fa-sun"></i>
         </div>
+        
+        <div class="local-time" id="localTime">
+          <i class="fas fa-clock"></i> <span id="time">--:--</span>
+        </div>
+        
         <p><strong id="cityName"></strong></p>
         
         <div class="weather-details">
-          <div class="detail-card">
-            <i class="fas fa-clock"></i>
-            <div class="value" id="time">--:--</div>
-            <div class="label">Current Time</div>
-          </div>
-          
           <div class="detail-card">
             <i class="fas fa-thermometer-half"></i>
             <div class="value" id="temp">--°C</div>
@@ -434,6 +468,12 @@
             <i class="fas fa-tint"></i>
             <div class="value" id="humidity">--%</div>
             <div class="label">Humidity</div>
+          </div>
+          
+          <div class="detail-card">
+            <i class="fas fa-compress-alt"></i>
+            <div class="value" id="pressure">-- hPa</div>
+            <div class="label">Pressure</div>
           </div>
         </div>
         
@@ -502,33 +542,21 @@
       "50n": "fas fa-smog"
     };
 
-    const backgrounds = [
-      "linear-gradient(135deg, #43CBFF 0%, #9708CC 100%)",
-      "linear-gradient(135deg, #5EFCE8 0%, #736EFE 100%)",
-      "linear-gradient(135deg, #FFF720 0%, #3CD500 100%)",
-      "linear-gradient(135deg, #FF9D6C 0%, #BB4E75 100%)",
-      "linear-gradient(135deg, #FAD7A1 0%, #E96D71 100%)"
-    ];
-    let bgIndex = 0;
-
-    function rotateBackground() {
-      document.body.style.background = backgrounds[bgIndex];
-      bgIndex = (bgIndex + 1) % backgrounds.length;
-    }
-    
-    // Initial call and then every 15 seconds
-    rotateBackground();
-    setInterval(rotateBackground, 15000);
-
-    function toggleMode() {
-      document.body.classList.toggle("dark");
-      const modeBtn = document.querySelector('.toggle-mode');
-      if (document.body.classList.contains('dark')) {
-        modeBtn.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
-      } else {
-        modeBtn.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
-      }
-    }
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', () => {
+      // Add suggestions on input
+      document.getElementById('cityInput').addEventListener('input', showSuggestions);
+      
+      // Hide suggestions when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-container')) {
+          document.getElementById('suggestions').style.display = 'none';
+        }
+      });
+      
+      // Set initial dark mode button
+      toggleMode();
+    });
 
     function showSuggestions() {
       const input = document.getElementById('cityInput').value.toLowerCase();
@@ -560,6 +588,17 @@
     function selectSuggestion(city) {
       document.getElementById('cityInput').value = city;
       document.getElementById('suggestions').style.display = 'none';
+      getWeather();
+    }
+
+    function toggleMode() {
+      document.body.classList.toggle("dark");
+      const modeBtn = document.querySelector('.toggle-mode');
+      if (document.body.classList.contains('dark')) {
+        modeBtn.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+      } else {
+        modeBtn.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+      }
     }
 
     function getWeather() {
@@ -613,9 +652,9 @@
       // Set weather icon animation based on condition
       const weatherIcon = document.querySelector('#weatherIcon i');
       if (iconCode.startsWith('01') || iconCode.startsWith('02')) {
-        weatherIcon.style.animation = "float 3s infinite";
+        weatherIcon.style.animation = "pulse 2s infinite, float 4s ease-in-out infinite";
       } else if (iconCode.startsWith('10') || iconCode.startsWith('09')) {
-        weatherIcon.style.animation = "none";
+        weatherIcon.style.animation = "pulse 2s infinite";
       } else {
         weatherIcon.style.animation = "pulse 2s infinite";
       }
@@ -625,6 +664,7 @@
       document.getElementById("condition").textContent = data.weather[0].description;
       document.getElementById("humidity").textContent = `${data.main.humidity}%`;
       document.getElementById("wind").textContent = `${data.wind.speed} m/s`;
+      document.getElementById("pressure").textContent = `${data.main.pressure} hPa`;
       document.getElementById("sunrise").textContent = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
       document.getElementById("sunset").textContent = new Date(data.sys.sunset * 1000).toLocaleTimeString();
       
@@ -633,7 +673,7 @@
       let aqiStatus = "Good";
       let aqiClass = "aqi-good";
       
-      // Random AQI for demonstration (in a real app, you'd get this from an API)
+      // Random AQI for demonstration
       const aqiValue = Math.floor(Math.random() * 150);
       if (aqiValue > 100) {
         aqiStatus = "Moderate";
@@ -651,26 +691,21 @@
       
       document.getElementById("quote").textContent = quotes[lang][Math.floor(Math.random() * quotes[lang].length)];
 
-      updateTime(data.dt);
+      // Update local time display
+      updateLocalTime(data.timezone);
     }
 
-    function updateTime(timeStamp) {
+    function updateLocalTime(timezoneOffset) {
       const update = () => {
-        document.getElementById("time").textContent = new Date(timeStamp * 1000 + (Date.now() - timeStamp * 1000)).toLocaleTimeString();
+        const now = new Date();
+        const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const localTime = new Date(utcTime + (timezoneOffset * 1000));
+        document.getElementById("time").textContent = localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       };
+      
       update();
-      setInterval(update, 60000);
+      setInterval(update, 60000); // Update every minute
     }
-    
-    // Initialize the app
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('cityInput').addEventListener('input', showSuggestions);
-      document.addEventListener('click', (e) => {
-        if (!e.target.closest('.search-container')) {
-          document.getElementById('suggestions').style.display = 'none';
-        }
-      });
-    });
   </script>
 </body>
 </html>
