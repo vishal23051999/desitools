@@ -4,39 +4,60 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Madhav Weather</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary: #00BFFF;
+      --primary-light: #70d7ff;
+      --primary-dark: #0088cc;
       --background: #E6F7FF;
       --text: #000;
-      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --suggestion-bg: rgba(255, 255, 255, 0.85);
+      --shadow: rgba(0, 0, 0, 0.1);
+      --success: #4CAF50;
+      --error: #f44336;
+      --transition: all 0.3s ease-in-out;
+    }
+
+    .dark {
+      --background: #1a1a1a;
+      --text: #fff;
+      --card-bg: rgba(30, 30, 30, 0.9);
+      --suggestion-bg: rgba(50, 50, 50, 0.85);
+      --shadow: rgba(0, 0, 0, 0.3);
     }
 
     * {
       box-sizing: border-box;
-      transition: all 0.3s ease-in-out;
+      transition: var(--transition);
     }
 
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: var(--background) no-repeat center center/cover;
       color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-attachment: fixed;
     }
 
     header, footer {
       background: var(--primary);
       color: #fff;
-      padding: 1rem;
+      padding: 1.2rem;
       text-align: center;
       font-weight: bold;
       font-size: 1.5rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px var(--shadow);
+      z-index: 10;
     }
 
     .toggle-mode {
       position: absolute;
-      top: 10px;
+      top: 12px;
       right: 15px;
       background: #fff;
       border: none;
@@ -44,7 +65,15 @@
       padding: 8px 16px;
       cursor: pointer;
       font-weight: bold;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .dark .toggle-mode {
+      background: #333;
+      color: white;
     }
 
     main {
@@ -52,193 +81,574 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      flex: 1;
     }
 
     .card {
       background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 16px;
+      padding: 2.2rem;
+      border-radius: 20px;
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
       text-align: center;
-      box-shadow: 0 12px 30px rgba(0, 191, 255, 0.2);
+      box-shadow: 0 15px 35px rgba(0, 191, 255, 0.25);
       backdrop-filter: blur(10px);
       animation: fadeIn 1s ease-in;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+      opacity: 0.1;
+      z-index: -1;
+      animation: rotate 20s linear infinite;
+    }
+    
+    .card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      pointer-events: none;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 1.2rem;
     }
 
     input, select, button {
-      padding: 12px;
+      padding: 14px;
       width: 100%;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-      border: 1px solid #00BFFF;
-      background-color: #f0fcff;
+      border-radius: 12px;
+      margin-bottom: 1.2rem;
+      font-size: 1.05rem;
+      border: 1px solid var(--primary);
+      background-color: rgba(240, 252, 255, 0.8);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-dark);
+      box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
     }
 
     button {
-      background: var(--primary);
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
       color: #fff;
       font-weight: bold;
       cursor: pointer;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-dark), var(--primary));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 191, 255, 0.4);
+    }
+    
+    button:hover::before {
+      opacity: 1;
+    }
+    
+    button:active {
+      transform: translateY(0);
     }
 
-    button:hover {
-      background: #0099cc;
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--suggestion-bg);
+      border-radius: 0 0 12px 12px;
+      max-height: 200px;
+      overflow-y: auto;
+      box-shadow: 0 5px 15px var(--shadow);
+      z-index: 100;
+      display: none;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(0, 191, 255, 0.2);
+      border-top: none;
+    }
+    
+    .suggestion-item {
+      padding: 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .suggestion-item i {
+      color: var(--primary);
+      font-size: 0.9rem;
+    }
+    
+    .suggestion-item:hover {
+      background: rgba(0, 191, 255, 0.1);
     }
 
     .weather-info {
       margin-top: 1.5rem;
       display: none;
-      animation: slideIn 1s ease forwards;
+      animation: slideIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .weather-icon {
+      font-size: 3.5rem;
+      margin: 15px 0;
+      animation: pulse 2s infinite;
     }
 
     .weather-info p {
-      margin: 8px 0;
-      font-size: 1.1rem;
+      margin: 10px 0;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .weather-info strong {
+      min-width: 120px;
+      text-align: right;
+      display: inline-block;
+    }
+    
+    .weather-info span {
+      text-align: left;
+      flex: 1;
     }
 
     #quote {
       font-weight: bold;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
       font-style: italic;
+      padding: 15px;
+      background: rgba(0, 191, 255, 0.1);
+      border-radius: 12px;
+      animation: fadeIn 1.5s ease;
+    }
+    
+    .aqi-good {
+      color: var(--success);
+    }
+    
+    .aqi-moderate {
+      color: #FFC107;
+    }
+    
+    .aqi-poor {
+      color: #FF9800;
+    }
+    
+    .aqi-unhealthy {
+      color: var(--error);
     }
 
     #loader {
       display: none;
-      font-size: 1rem;
-      color: #555;
-      animation: blink 1s infinite;
+      font-size: 1.1rem;
+      color: var(--primary);
+      animation: blink 1.5s infinite;
+      margin: 20px 0;
+    }
+    
+    #error-message {
+      color: var(--error);
+      margin: 10px 0;
+      display: none;
+      animation: shake 0.5s;
+    }
+    
+    .weather-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+      text-align: left;
+    }
+    
+    .detail-card {
+      background: rgba(0, 191, 255, 0.08);
+      padding: 15px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .detail-card i {
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    
+    .detail-card .value {
+      font-weight: bold;
+      font-size: 1.3rem;
+      margin: 5px 0;
+    }
+    
+    .detail-card .label {
+      font-size: 0.9rem;
+      opacity: 0.8;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
+      from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
 
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
     @keyframes blink {
       0% { opacity: 1; }
       50% { opacity: 0.4; }
       100% { opacity: 1; }
     }
-
-    @media (max-width: 600px) {
-      .card { padding: 1rem; }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
     }
 
-    body.dark {
-      --background: #1a1a1a;
-      --text: #fff;
-      --card-bg: rgba(30, 30, 30, 0.8);
+    @media (max-width: 600px) {
+      .card { padding: 1.5rem; }
+      header, footer { padding: 1rem; }
+      .weather-details {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
-  <header>🌦️ Madhav Weather</header>
-  <button class="toggle-mode" onclick="toggleMode()">🌗 Toggle Mode</button>
+  <header>
+    <i class="fas fa-cloud-sun"></i>
+    Madhav Weather
+  </header>
+  <button class="toggle-mode" onclick="toggleMode()">
+    <i class="fas fa-moon"></i> Toggle Mode
+  </button>
 
   <main>
     <div class="card">
-      <input type="text" id="cityInput" placeholder="Enter city name" list="cityList" />
-      <datalist id="cityList">
-        <option value="Delhi"><option value="Mumbai"><option value="Bangalore">
-        <option value="London"><option value="New York"><option value="Tokyo">
-      </datalist>
+      <div class="search-container">
+        <input type="text" id="cityInput" placeholder="Enter city name" autocomplete="off" />
+        <div class="suggestions" id="suggestions"></div>
+      </div>
+      
       <select id="languageSelect">
         <option value="en">English</option>
         <option value="hi">Hindi</option>
       </select>
-      <button onclick="getWeather()">Check Weather</button>
-      <p id="loader">🔄 Loading...</p>
+      
+      <button onclick="getWeather()">
+        <i class="fas fa-search"></i> Check Weather
+      </button>
+      
+      <div id="error-message"></div>
+      <p id="loader"><i class="fas fa-spinner fa-spin"></i> Loading weather data...</p>
 
       <div class="weather-info" id="weatherInfo">
+        <div class="weather-icon" id="weatherIcon">
+          <i class="fas fa-sun"></i>
+        </div>
         <p><strong id="cityName"></strong></p>
-        <p>🕒 Time: <span id="time"></span></p>
-        <p>🌡️ Temperature: <span id="temp"></span> °C</p>
-        <p>🌤️ Condition: <span id="condition"></span></p>
-        <p>💧 Humidity: <span id="humidity"></span>%</p>
-        <p>💨 Wind: <span id="wind"></span> m/s</p>
-        <p>🌅 Sunrise: <span id="sunrise"></span></p>
-        <p>🌇 Sunset: <span id="sunset"></span></p>
-        <p>🌫 AQI: <span id="aqi">Good</span></p>
+        
+        <div class="weather-details">
+          <div class="detail-card">
+            <i class="fas fa-clock"></i>
+            <div class="value" id="time">--:--</div>
+            <div class="label">Current Time</div>
+          </div>
+          
+          <div class="detail-card">
+            <i class="fas fa-thermometer-half"></i>
+            <div class="value" id="temp">--°C</div>
+            <div class="label">Temperature</div>
+          </div>
+          
+          <div class="detail-card">
+            <i class="fas fa-wind"></i>
+            <div class="value" id="wind">-- m/s</div>
+            <div class="label">Wind Speed</div>
+          </div>
+          
+          <div class="detail-card">
+            <i class="fas fa-tint"></i>
+            <div class="value" id="humidity">--%</div>
+            <div class="label">Humidity</div>
+          </div>
+        </div>
+        
+        <div class="additional-info">
+          <p><i class="fas fa-cloud"></i> Condition: <span id="condition"></span></p>
+          <p><i class="fas fa-sun"></i> Sunrise: <span id="sunrise"></span></p>
+          <p><i class="fas fa-moon"></i> Sunset: <span id="sunset"></span></p>
+          <p><i class="fas fa-smog"></i> AQI: <span id="aqi">Good</span></p>
+        </div>
+        
         <p id="quote"></p>
       </div>
     </div>
   </main>
 
-  <footer>© 2025 Madhav Weather</footer>
+  <footer>
+    <i class="fas fa-heart"></i> © 2025 Madhav Weather
+  </footer>
 
   <script>
     const API_KEY = "bfc41a67897092b16f4f053a1211032d";
     const quotes = {
       en: [
-        "Believe in yourself. 🌟",
-        "Every day is a new beginning. 🌅",
-        "You can do it! 💪",
-        "Stay positive, work hard. 💼",
-        "Dream big and dare to fail. ✨"
+        "The best view comes after the hardest climb. ⛰️",
+        "Sunshine is the best medicine. ☀️",
+        "Every cloud has a silver lining. ☁️✨",
+        "Life isn't about waiting for the storm to pass... it's about learning to dance in the rain. 🌧️💃",
+        "A rainy day is a special gift to readers. 📚☔"
       ],
       hi: [
-        "खुद पर विश्वास रखो। 🌟",
-        "हर दिन एक नई शुरुआत है। 🌅",
-        "तुम कर सकते हो! 💪",
-        "सकारात्मक रहो, मेहनत करो। 💼",
-        "बड़ा सोचो और कोशिश करो। ✨"
+        "हर मुश्किल के बाद सबसे अच्छा नज़ारा आता है। ⛰️",
+        "धूप सबसे अच्छी दवा है। ☀️",
+        "हर बादल के पीछे चांदी की परत होती है। ☁️✨",
+        "जीवन तूफान के गुजरने की प्रतीक्षा करने के बारे में नहीं है... बारिश में नृत्य करना सीखने के बारे में है। 🌧️💃",
+        "बरसात का दिन पाठकों के लिए एक विशेष उपहार है। 📚☔"
       ]
     };
 
+    const popularCities = [
+      "Delhi, India", "Mumbai, India", "Bangalore, India",
+      "Kolkata, India", "Chennai, India", "Hyderabad, India",
+      "London, UK", "New York, USA", "Tokyo, Japan",
+      "Paris, France", "Sydney, Australia", "Dubai, UAE",
+      "Singapore", "Toronto, Canada", "Berlin, Germany",
+      "Moscow, Russia", "Cairo, Egypt", "Rio de Janeiro, Brazil"
+    ];
+
+    const weatherIcons = {
+      "01d": "fas fa-sun",           // clear sky (day)
+      "01n": "fas fa-moon",          // clear sky (night)
+      "02d": "fas fa-cloud-sun",     // few clouds (day)
+      "02n": "fas fa-cloud-moon",   // few clouds (night)
+      "03d": "fas fa-cloud",         // scattered clouds
+      "03n": "fas fa-cloud",
+      "04d": "fas fa-cloud",         // broken clouds
+      "04n": "fas fa-cloud",
+      "09d": "fas fa-cloud-rain",   // shower rain
+      "09n": "fas fa-cloud-rain",
+      "10d": "fas fa-cloud-sun-rain", // rain (day)
+      "10n": "fas fa-cloud-moon-rain",// rain (night)
+      "11d": "fas fa-bolt",          // thunderstorm
+      "11n": "fas fa-bolt",
+      "13d": "fas fa-snowflake",     // snow
+      "13n": "fas fa-snowflake",
+      "50d": "fas fa-smog",          // mist
+      "50n": "fas fa-smog"
+    };
+
     const backgrounds = [
-      "https://source.unsplash.com/1600x900/?nature,water",
-      "https://source.unsplash.com/1600x900/?mountains",
-      "https://source.unsplash.com/1600x900/?sky,clouds",
-      "https://source.unsplash.com/1600x900/?forest",
-      "https://source.unsplash.com/1600x900/?sunrise"
+      "linear-gradient(135deg, #43CBFF 0%, #9708CC 100%)",
+      "linear-gradient(135deg, #5EFCE8 0%, #736EFE 100%)",
+      "linear-gradient(135deg, #FFF720 0%, #3CD500 100%)",
+      "linear-gradient(135deg, #FF9D6C 0%, #BB4E75 100%)",
+      "linear-gradient(135deg, #FAD7A1 0%, #E96D71 100%)"
     ];
     let bgIndex = 0;
 
     function rotateBackground() {
-      document.body.style.backgroundImage = `url(${backgrounds[bgIndex]})`;
+      document.body.style.background = backgrounds[bgIndex];
       bgIndex = (bgIndex + 1) % backgrounds.length;
     }
-    setInterval(rotateBackground, 10000); // every 10 sec
+    
+    // Initial call and then every 15 seconds
     rotateBackground();
+    setInterval(rotateBackground, 15000);
 
     function toggleMode() {
       document.body.classList.toggle("dark");
+      const modeBtn = document.querySelector('.toggle-mode');
+      if (document.body.classList.contains('dark')) {
+        modeBtn.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+      } else {
+        modeBtn.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+      }
+    }
+
+    function showSuggestions() {
+      const input = document.getElementById('cityInput').value.toLowerCase();
+      const suggestions = document.getElementById('suggestions');
+      
+      if (input.length < 2) {
+        suggestions.style.display = 'none';
+        return;
+      }
+      
+      const filtered = popularCities.filter(city => 
+        city.toLowerCase().includes(input)
+      );
+      
+      if (filtered.length === 0) {
+        suggestions.style.display = 'none';
+        return;
+      }
+      
+      suggestions.innerHTML = filtered.map(city => `
+        <div class="suggestion-item" onclick="selectSuggestion('${city}')">
+          <i class="fas fa-map-marker-alt"></i> ${city}
+        </div>
+      `).join('');
+      
+      suggestions.style.display = 'block';
+    }
+    
+    function selectSuggestion(city) {
+      document.getElementById('cityInput').value = city;
+      document.getElementById('suggestions').style.display = 'none';
     }
 
     function getWeather() {
       const city = document.getElementById("cityInput").value.trim();
       const lang = document.getElementById("languageSelect").value;
-      if (!city) return alert("Please enter a city.");
+      const errorMsg = document.getElementById("error-message");
+      
+      if (!city) {
+        errorMsg.textContent = lang === 'hi' ? 
+          "कृपया शहर का नाम दर्ज करें।" : 
+          "Please enter a city name.";
+        errorMsg.style.display = "block";
+        setTimeout(() => {
+          errorMsg.style.display = "none";
+        }, 3000);
+        return;
+      }
+      
       document.getElementById("loader").style.display = "block";
+      errorMsg.style.display = "none";
+      
       fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=${lang}`)
         .then(res => res.json())
-        .then(data => showWeather(data, lang))
-        .catch(() => alert("Failed to fetch weather data."))
+        .then(data => {
+          if (data.cod === 200) {
+            showWeather(data, lang);
+          } else {
+            throw new Error(data.message || "Failed to fetch weather data");
+          }
+        })
+        .catch(err => {
+          errorMsg.textContent = lang === 'hi' ? 
+            `त्रुटि: ${err.message || "मौसम डेटा प्राप्त करने में विफल"}` : 
+            `Error: ${err.message || "Failed to fetch weather data"}`;
+          errorMsg.style.display = "block";
+        })
         .finally(() => {
           document.getElementById("loader").style.display = "none";
         });
     }
 
     function showWeather(data, lang) {
-      if (!data || !data.main) return alert("Weather data unavailable.");
       const info = document.getElementById("weatherInfo");
       info.style.display = "block";
-
+      
+      // Update weather icon
+      const iconCode = data.weather[0].icon;
+      const iconClass = weatherIcons[iconCode] || "fas fa-cloud";
+      document.getElementById("weatherIcon").innerHTML = `<i class="${iconClass}"></i>`;
+      
+      // Set weather icon animation based on condition
+      const weatherIcon = document.querySelector('#weatherIcon i');
+      if (iconCode.startsWith('01') || iconCode.startsWith('02')) {
+        weatherIcon.style.animation = "float 3s infinite";
+      } else if (iconCode.startsWith('10') || iconCode.startsWith('09')) {
+        weatherIcon.style.animation = "none";
+      } else {
+        weatherIcon.style.animation = "pulse 2s infinite";
+      }
+      
       document.getElementById("cityName").textContent = `${data.name}, ${data.sys.country}`;
-      document.getElementById("temp").textContent = data.main.temp;
+      document.getElementById("temp").textContent = `${Math.round(data.main.temp)}°C`;
       document.getElementById("condition").textContent = data.weather[0].description;
-      document.getElementById("humidity").textContent = data.main.humidity;
-      document.getElementById("wind").textContent = data.wind.speed;
+      document.getElementById("humidity").textContent = `${data.main.humidity}%`;
+      document.getElementById("wind").textContent = `${data.wind.speed} m/s`;
       document.getElementById("sunrise").textContent = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
       document.getElementById("sunset").textContent = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+      
+      // Set AQI with appropriate class
+      const aqiElement = document.getElementById("aqi");
+      let aqiStatus = "Good";
+      let aqiClass = "aqi-good";
+      
+      // Random AQI for demonstration (in a real app, you'd get this from an API)
+      const aqiValue = Math.floor(Math.random() * 150);
+      if (aqiValue > 100) {
+        aqiStatus = "Moderate";
+        aqiClass = "aqi-moderate";
+      } else if (aqiValue > 150) {
+        aqiStatus = "Poor";
+        aqiClass = "aqi-poor";
+      } else if (aqiValue > 200) {
+        aqiStatus = "Unhealthy";
+        aqiClass = "aqi-unhealthy";
+      }
+      
+      aqiElement.textContent = `${aqiStatus} (${aqiValue})`;
+      aqiElement.className = aqiClass;
+      
       document.getElementById("quote").textContent = quotes[lang][Math.floor(Math.random() * quotes[lang].length)];
 
       updateTime(data.dt);
@@ -249,8 +659,18 @@
         document.getElementById("time").textContent = new Date(timeStamp * 1000 + (Date.now() - timeStamp * 1000)).toLocaleTimeString();
       };
       update();
-      setInterval(update, 60000); // every minute
+      setInterval(update, 60000);
     }
+    
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('cityInput').addEventListener('input', showSuggestions);
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-container')) {
+          document.getElementById('suggestions').style.display = 'none';
+        }
+      });
+    });
   </script>
 </body>
 </html>
