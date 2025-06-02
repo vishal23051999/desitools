@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiveWall Pro - Premium Animated Wallpapers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5d4aec;
+            --secondary: #00cec9;
+            --dark: #1a1a2e;
+            --darker: #0f0f1a;
+            --light: #f8f9fa;
+            --gray: #8a8a9c;
+            --card-bg: rgba(26, 26, 46, 0.8);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] {
+            --dark: #f0f2f5;
+            --darker: #e4e6eb;
+            --light: #1a1a2e;
+            --gray: #5a5a6e;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(10, 10, 20, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        [data-theme="light"] header {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--secondary);
+            font-size: 1.8rem;
+        }
+
+        .logo h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: none;
+            width: 50px;
+            height: 26px;
+            border-radius: 50px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 3px;
+        }
+
+        .theme-toggle i {
+            position: absolute;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .theme-toggle .fa-sun {
+            left: 5px;
+            color: #f39c12;
+        }
+
+        .theme-toggle .fa-moon {
+            right: 5px;
+            color: #f1c40f;
+        }
+
+        .toggle-circle {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            position: absolute;
+            transition: var(--transition);
+            left: 3px;
+        }
+
+        [data-theme="light"] .toggle-circle {
+            transform: translateX(24px);
+            background: var(--secondary);
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-container input {
+            background: var(--card-bg);
+            border: 2px solid rgba(108, 92, 231, 0.3);
+            border-radius: 50px;
+            padding: 0.6rem 1rem 0.6rem 40px;
+            color: var(--light);
+            width: 250px;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: none;
+            color: var(--light);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+        }
+
+        /* Wallpaper Grid */
+        .wallpaper-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .wallpaper-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .wallpaper-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .preview-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-container video, .preview-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .wallpaper-card:hover .preview-container video, 
+        .wallpaper-card:hover .preview-container img {
+            transform: scale(1.05);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .wallpaper-card:hover .overlay {
+            opacity: 1;
+        }
+
+        .overlay-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .overlay-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 1.2rem;
+        }
+
+        .card-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(108, 92, 231, 0.2);
+            color: var(--primary);
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.7rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .download-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .set-btn {
+            background: rgba(0, 206, 201, 0.2);
+            color: var(--secondary);
+        }
+
+        .set-btn:hover {
+            background: rgba(0, 206, 201, 0.3);
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .stat-box {
+            background: rgba(108, 92, 231, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            min-width: 150px;
+        }
+
+        .stat-box .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-box .label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        /* Featured Section */
+        .featured-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(108, 92, 231, 0.1);
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .featured-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .featured-card {
+            border-radius: 15px;
+            overflow: hidden;
+            height: 150px;
+            position: relative;
+        }
+
+        .featured-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-card .title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 10, 20, 0.9);
+            text-align: center;
+            padding: 2rem 5%;
+            margin-top: 3rem;
+            transition: var(--transition);
+        }
+
+        [data-theme="light"] footer {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            margin: 1rem 0;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 1.5rem 0;
+        }
+
+        .social-links a {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px);
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Android Instructions Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            transform: translateY(-20px);
+            transition: var(--transition);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .steps {
+            margin-bottom: 1.5rem;
+        }
+
+        .step {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step p {
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .wallpaper-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 1rem 5%;
+            }
+            
+            .search-container input {
+                width: 100%;
+            }
+            
+            .stats {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .wallpaper-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .filters {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .card-actions {
+                flex-direction: column;
+            }
+            
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-play-circle"></i>
+            <h1>LiveWall Pro</h1>
+        </div>
+        <div class="controls">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search wallpapers...">
+            </div>
+            <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-moon"></i>
+                <span class="toggle-circle"></span>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div class="stats">
+            <div class="stat-box">
+                <div class="number">50+</div>
+                <div class="label">Premium Wallpapers</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">4K</div>
+                <div class="label">High Resolution</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">100%</div>
+                <div class="label">Free to Use</div>
+            </div>
+        </div>
+        
+        <div class="section-header">
+            <h2>Premium Animated Wallpapers</h2>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="nature">Nature</button>
+                <button class="filter-btn" data-filter="space">Space</button>
+                <button class="filter-btn" data-filter="abstract">Abstract</button>
+                <button class="filter-btn" data-filter="neon">Neon</button>
+                <button class="filter-btn" data-filter="gradient">Gradient</button>
+                <button class="filter-btn" data-filter="tech">Tech</button>
+                <button class="filter-btn" data-filter="anime">Anime</button>
+            </div>
+        </div>
+        
+        <div class="wallpaper-grid" id="wallpaper-grid">
+            <!-- Wallpaper cards will be generated by JavaScript -->
+        </div>
+        
+        <div class="featured-section">
+            <h3>Editor's Picks</h3>
+            <div class="featured-grid">
+                <div class="featured-card">
+                    <video autoplay muted loop>
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-night-sky-with-stars-1380-large.mp4" type="video/mp4">
+                    </video>
+                    <div class="title">Galaxy Nebula</div>
+                </div>
+                <div class="featured-card">
+                    <video autoplay muted loop>
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4" type="video/mp4">
+                    </video>
+                    <div class="title">Forest Stream</div>
+                </div>
+                <div class="featured-card">
+                    <video autoplay muted loop>
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-seashore-with-rocks-1190-large.mp4" type="video/mp4">
+                    </video>
+                    <div class="title">Ocean Cliffs</div>
+                </div>
+                <div class="featured-card">
+                    <video autoplay muted loop>
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-of-a-fountain-at-night-1180-large.mp4" type="video/mp4">
+                    </video>
+                    <div class="title">Night Fountain</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3>LiveWall Pro</h3>
+            <p>Discover the most beautiful animated wallpapers for your mobile device. All wallpapers are free to download and use.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">© 2023 LiveWall Pro. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <!-- Android Instructions Modal -->
+    <div class="modal" id="android-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-modal"><i class="fas fa-times"></i></button>
+            <h3>How to Set as Live Wallpaper</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <p>Download the wallpaper using the download button</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <p>Install a live wallpaper app from Play Store (e.g. "Video Wallpaper")</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <p>Open the app and select the downloaded video</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <p>Adjust settings and apply as your wallpaper</p>
+                </div>
+            </div>
+            <p><strong>Note:</strong> Some devices support live wallpapers natively. Check your device settings under Wallpaper options.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Enhanced wallpaper data with actual video URLs
+        const wallpapers = [
+            { id: 1, title: "Cosmic Nebula", tags: ["space", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-night-sky-with-stars-1380-large.mp4" },
+            { id: 2, title: "Forest Waterfall", tags: ["nature", "water"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4" },
+            { id: 3, title: "Neon Cityscape", tags: ["neon", "city"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-city-traffic-at-night-1088-large.mp4" },
+            { id: 4, title: "Liquid Gradient", tags: ["abstract", "gradient"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-ink-in-water-1193-large.mp4" },
+            { id: 5, title: "Galaxy Center", tags: ["space", "stars"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4" },
+            { id: 6, title: "Mountain Sunset", tags: ["nature", "sunset"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-landscape-of-mountains-at-sunset-1226-large.mp4" },
+            { id: 7, title: "Circuit Board", tags: ["neon", "tech"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-circuit-board-close-up-1023-large.mp4" },
+            { id: 8, title: "Deep Ocean", tags: ["nature", "water"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-under-the-sea-1187-large.mp4" },
+            { id: 9, title: "Purple Haze", tags: ["abstract", "gradient"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-purple-fluid-1192-large.mp4" },
+            { id: 10, title: "Electric Storm", tags: ["space", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-lightning-over-a-dark-background-1227-large.mp4" },
+            { id: 11, title: "Bamboo Forest", tags: ["nature", "forest"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-bamboo-forest-on-a-windy-day-1184-large.mp4" },
+            { id: 12, title: "Cyberpunk Street", tags: ["neon", "city"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-rainy-night-in-a-metropolis-1089-large.mp4" },
+            { id: 13, title: "Sunrise Waves", tags: ["nature", "water"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-shore-186-large.mp4" },
+            { id: 14, title: "Plasma Flow", tags: ["abstract", "gradient"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-blue-fluid-1191-large.mp4" },
+            { id: 15, title: "Stellar Journey", tags: ["space", "stars"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4" },
+            { id: 16, title: "Desert Dunes", tags: ["nature", "desert"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-desert-landscape-at-sunset-1225-large.mp4" },
+            { id: 17, title: "Neon Matrix", tags: ["neon", "tech"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-circuit-board-close-up-1023-large.mp4" },
+            { id: 18, title: "Aurora Sky", tags: ["space", "nature"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-aurora-borealis-1228-large.mp4" },
+            { id: 19, title: "Lava Flow", tags: ["abstract", "gradient"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-orange-fluid-1194-large.mp4" },
+            { id: 20, title: "Futuristic HUD", tags: ["neon", "tech"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hud-interface-1197-large.mp4" },
+            { id: 21, title: "Deep Space", tags: ["space", "stars"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-deep-space-1611-large.mp4" },
+            { id: 22, title: "Tropical Paradise", tags: ["nature", "beach"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-tropical-island-1224-large.mp4" },
+            { id: 23, title: "Digital Rain", tags: ["neon", "tech"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-digital-rain-1196-large.mp4" },
+            { id: 24, title: "Misty Mountains", tags: ["nature", "mountains"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-mountain-peak-1223-large.mp4" },
+            { id: 25, title: "Quantum Swirl", tags: ["abstract", "gradient"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-green-fluid-1190-large.mp4" },
+            { id: 26, title: "Neon Vortex", tags: ["neon", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-ink-in-water-1193-large.mp4" },
+            { id: 27, title: "Solar Flare", tags: ["space", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-sun-flares-1229-large.mp4" },
+            { id: 28, title: "Crystal Cave", tags: ["nature", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-ice-crystals-1230-large.mp4" },
+            { id: 29, title: "Retro Sunset", tags: ["gradient", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-orange-fluid-1194-large.mp4" },
+            { id: 30, title: "Neon Jungle", tags: ["neon", "nature"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-jungle-with-trees-1185-large.mp4" },
+            { id: 31, title: "Interstellar", tags: ["space", "stars"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4" },
+            { id: 32, title: "Waterfall Mist", tags: ["nature", "water"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-1183-large.mp4" },
+            { id: 33, title: "Electric Dreams", tags: ["neon", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-blue-electricity-1231-large.mp4" },
+            { id: 34, title: "Northern Lights", tags: ["space", "nature"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-aurora-borealis-1228-large.mp4" },
+            { id: 35, title: "Liquid Metal", tags: ["abstract", "gradient"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-liquid-metal-1195-large.mp4" },
+            { id: 36, title: "City Lights", tags: ["neon", "city"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-city-traffic-at-night-1088-large.mp4" },
+            { id: 37, title: "Mars Surface", tags: ["space", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-martian-landscape-1232-large.mp4" },
+            { id: 38, title: "Bioluminescent", tags: ["nature", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-underwater-with-glowing-jellyfish-1233-large.mp4" },
+            { id: 39, title: "Sunset Gradient", tags: ["gradient", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-sun-flares-1229-large.mp4" },
+            { id: 40, title: "Cyber Forest", tags: ["neon", "nature"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-jungle-with-trees-1185-large.mp4" },
+            { id: 41, title: "Black Hole", tags: ["space", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-black-hole-in-space-1612-large.mp4" },
+            { id: 42, title: "Coral Reef", tags: ["nature", "water"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-under-the-sea-1187-large.mp4" },
+            { id: 43, title: "Neon Grid", tags: ["neon", "tech"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hud-interface-1197-large.mp4" },
+            { id: 44, title: "Milky Way", tags: ["space", "stars"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-night-sky-with-stars-1380-large.mp4" },
+            { id: 45, title: "Mountain Lake", tags: ["nature", "water"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-mountain-peak-1223-large.mp4" },
+            { id: 46, title: "Plasma Ball", tags: ["abstract", "gradient"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-blue-electricity-1231-large.mp4" },
+            { id: 47, title: "Hologram", tags: ["neon", "tech"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hologram-interface-1198-large.mp4" },
+            { id: 48, title: "Jupiter Storm", tags: ["space", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-jupiter-rotating-1613-large.mp4" },
+            { id: 49, title: "Water Reflection", tags: ["nature", "water"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-shore-186-large.mp4" },
+            { id: 50, title: "Rainbow Flow", tags: ["gradient", "abstract"], videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-purple-fluid-1192-large.mp4" }
+        ];
+        
+        // DOM Elements
+        const wallpaperGrid = document.getElementById('wallpaper-grid');
+        const searchInput = document.getElementById('search-input');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const androidModal = document.getElementById('android-modal');
+        const closeModal = document.getElementById('close-modal');
+        
+        // Initialize the app
+        function initApp() {
+            renderWallpapers(wallpapers);
+            setupEventListeners();
+            setupIntersectionObserver();
+        }
+        
+        // Render wallpapers to the grid
+        function renderWallpapers(wallpapersArray) {
+            wallpaperGrid.innerHTML = '';
+            
+            wallpapersArray.forEach(wallpaper => {
+                const tagsHTML = wallpaper.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+                
+                const card = document.createElement('div');
+                card.className = 'wallpaper-card';
+                card.setAttribute('data-tags', wallpaper.tags.join(' '));
+                
+                card.innerHTML = `
+                    <div class="preview-container">
+                        <video autoplay muted loop playsinline>
+                            <source src="${wallpaper.videoUrl}" type="video/mp4">
+                        </video>
+                        <div class="overlay">
+                            <button class="overlay-btn"><i class="fas fa-expand"></i></button>
+                            <button class="overlay-btn"><i class="fas fa-play"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3>${wallpaper.title}</h3>
+                        <div class="tags">${tagsHTML}</div>
+                        <div class="card-actions">
+                            <button class="btn download-btn" data-id="${wallpaper.id}">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <button class="btn set-btn" data-id="${wallpaper.id}">
+                                <i class="fas fa-mobile-alt"></i> Set
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                wallpaperGrid.appendChild(card);
+            });
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Theme toggle
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                filterWallpapers(searchTerm);
+            });
+            
+            // Filter buttons
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    const filter = button.getAttribute('data-filter');
+                    filterWallpapers('', filter);
+                });
+            });
+            
+            // Set as wallpaper buttons
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.set-btn')) {
+                    const button = e.target.closest('.set-btn');
+                    const id = button.getAttribute('data-id');
+                    setAsWallpaper(id);
+                }
+                
+                if (e.target.closest('.download-btn')) {
+                    const button = e.target.closest('.download-btn');
+                    const id = button.getAttribute('data-id');
+                    downloadWallpaper(id);
+                }
+            });
+            
+            // Modal close
+            closeModal.addEventListener('click', () => {
+                androidModal.classList.remove('active');
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === androidModal) {
+                    androidModal.classList.remove('active');
+                }
+            });
+        }
+        
+        // Filter wallpapers based on search and filter
+        function filterWallpapers(searchTerm = '', filter = 'all') {
+            const filtered = wallpapers.filter(wallpaper => {
+                const matchesSearch = searchTerm === '' || 
+                    wallpaper.title.toLowerCase().includes(searchTerm) || 
+                    wallpaper.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                
+                const matchesFilter = filter === 'all' || wallpaper.tags.includes(filter);
+                
+                return matchesSearch && matchesFilter;
+            });
+            
+            renderWallpapers(filtered);
+        }
+        
+        // Set as wallpaper functionality
+        function setAsWallpaper(id) {
+            const wallpaper = wallpapers.find(w => w.id == id);
+            
+            // Check if Android device
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            if (isAndroid) {
+                // Try to use Android Intent
+                try {
+                    const intentUrl = `intent://set_wallpaper?file_url=${encodeURIComponent(wallpaper.videoUrl)}#Intent;package=com.android.wallpaper;end`;
+                    window.location.href = intentUrl;
+                } catch (e) {
+                    // Fallback to instructions
+                    showAndroidInstructions();
+                }
+            } else {
+                // Show instructions for non-Android
+                showAndroidInstructions();
+            }
+        }
+        
+        // Show Android instructions modal
+        function showAndroidInstructions() {
+            androidModal.classList.add('active');
+        }
+        
+        // Download wallpaper
+        function downloadWallpaper(id) {
+            const wallpaper = wallpapers.find(w => w.id == id);
+            
+            // Create a temporary link to trigger download
+            const link = document.createElement('a');
+            link.href = wallpaper.videoUrl;
+            link.download = `livewall-${wallpaper.title.replace(/\s+/g, '-').toLowerCase()}.mp4`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Setup Intersection Observer for scroll animations
+        function setupIntersectionObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeIn 0.5s forwards';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            // Observe each wallpaper card
+            document.querySelectorAll('.wallpaper-card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+        
+        // Initialize the app
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
